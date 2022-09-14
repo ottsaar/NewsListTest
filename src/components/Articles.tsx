@@ -1,14 +1,14 @@
 import React from "react";
-import { Article, ArticleType } from "./Article";
-import { useQuery, gql } from "@apollo/client";
-import { NEWS_LIST } from "../graphql/articles";
+import { ArticleThumbnail } from "./ArticleThumbnail";
+import { useQuery } from "@apollo/client";
+import { NEWS_LIST } from "../graphql/newsList";
 
 export function Articles() {
   const { data, loading, error } = useQuery(NEWS_LIST);
   if (loading)
     return (
       <>
-        <p>"Loading..."</p>
+        <div>"Loading..."</div>
       </>
     );
   if (error) return <>{error.message}</>;
@@ -17,7 +17,14 @@ export function Articles() {
   return (
     <div className="articles">
       {articles.map((row) => {
-        return <Article title={row.title} imgSrc={row.img} />;
+        return (
+          <ArticleThumbnail
+            key={row.id}
+            title={row.title}
+            imgSrc={row.img}
+            id={row.id}
+          />
+        );
       })}
     </div>
   );
@@ -25,8 +32,6 @@ export function Articles() {
 
 interface ArticleRow {
   id: string;
-  url: string;
   title: string;
-  content: string;
   img: string;
 }

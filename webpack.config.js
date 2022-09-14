@@ -8,6 +8,7 @@ module.exports = {
   entry: "./src/index.tsx",
   output: {
     path: __dirname + "/dist/",
+    publicPath: "/",
   },
   module: {
     rules: [
@@ -20,12 +21,26 @@ module.exports = {
         use: "ts-loader",
       },
       {
+        test: /\.svg$/,
+        use: [
+          {
+            loader: "svg-url-loader",
+            options: {
+              limit: 10000,
+            },
+          },
+        ],
+      },
+      {
         test: /\.(s(a|c)ss)$/,
         use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
       },
     ],
   },
   devtool: prod ? undefined : "source-map",
+  devServer: {
+    historyApiFallback: true,
+  },
   plugins: [
     new HtmlWebpackPlugin({
       template: "index.html",

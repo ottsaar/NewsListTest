@@ -7,8 +7,6 @@ export const NEWS_LIST = gql`
       rows {
         id
         title
-        content
-        url
         img
       }
     }
