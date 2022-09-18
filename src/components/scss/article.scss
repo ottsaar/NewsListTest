@@ -1,0 +1,112 @@
+@import "variables";
+
+.article-wrapper {
+  display: flex;
+  flex-direction: row;
+}
+.article__img {
+  margin-top: 48px;
+  width: 100%;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 95%);
+  filter: drop-shadow(0px 4px 10px rgba(0, 0, 0, 0.1));
+}
+.article {
+  flex: 2;
+  margin-top: 20px;
+  width: 600px;
+  &__title {
+    margin-top: 8px;
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 25px;
+    color: $black-100;
+  }
+  &__date {
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 24px;
+    color: $brown-grey;
+  }
+  &__content {
+    margin-top: 10px;
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: $black-100;
+  }
+}
+
+.article-comments {
+  margin-top: 27px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  max-width: 360px;
+
+  &__title {
+    margin-top: 16px;
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 22px;
+
+    /* Black/100 */
+    color: $black-100;
+  }
+  &__sub-title {
+    margin-top: 16px;
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    color: #000000;
+  }
+
+  &__comments {
+    overflow-y: scroll;
+    max-height: 500px;
+    border-bottom: 2px dashed #cccccc;
+  }
+
+  &__email-input,
+  &__comment-input {
+    height: 32px;
+    margin-top: 8px;
+    background: #ffffff;
+    border: 0.5px solid #cccccc;
+    border-radius: 3px;
+
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 17px;
+    color: $black-100;
+  }
+  &__comment-input {
+    height: 84px;
+    resize: none;
+  }
+
+  &__add-btn {
+    margin-top: 16px;
+    border: 1px solid #2c2e32;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    width: 145px;
+    height: 32px;
+  }
+}

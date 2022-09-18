@@ -2,6 +2,7 @@ import React from "react";
 import { ArticleThumbnail } from "./ArticleThumbnail";
 import { useQuery } from "@apollo/client";
 import { NEWS_LIST } from "../graphql/newsList";
+import { Link } from "react-router-dom";
 
 export function Articles() {
   const { data, loading, error } = useQuery(NEWS_LIST);
@@ -17,13 +18,11 @@ export function Articles() {
   return (
     <div className="articles">
       {articles.map((row) => {
+        const urlRef = "news/" + row.id;
         return (
-          <ArticleThumbnail
-            key={row.id}
-            title={row.title}
-            imgSrc={row.img}
-            id={row.id}
-          />
+          <Link key={row.id} to={urlRef}>
+            <ArticleThumbnail title={row.title} imgSrc={row.img} id={row.id} />
+          </Link>
         );
       })}
     </div>

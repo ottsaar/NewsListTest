@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const NEWS_ITEM = gql`
-  query NewsItem($id: String) {
+  query NewsItem($id: ID!) {
     newsItem(id: $id) {
       id
       title

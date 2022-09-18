@@ -1,5 +1,5 @@
 import React from "react";
-import "./scss/styles.scss";
+import "./scss/comment.scss";
 import moment from "moment";
 
 export interface CommentType {
@@ -9,7 +9,7 @@ export interface CommentType {
   createdDate: string;
 }
 
-export function ArticleThumbnail(props: CommentType) {
+export function Comment(props: CommentType) {
   function formatComment(date: string) {
     return moment(date).startOf("minute").fromNow();
   }
@@ -18,12 +18,12 @@ export function ArticleThumbnail(props: CommentType) {
     <div className="comment">
       <div className="comment__info">
         <div className="comment__email">{props.email}</div>
-        <div className="comment__createdAt">
+        <div className="comment__created-at">
           {formatComment(props.createdDate)}
         </div>
       </div>
 
-      <div className="comnent__content">{props.content}</div>
+      <div className="comment__content">{props.content}</div>
     </div>
   );
 }

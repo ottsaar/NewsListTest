@@ -1,12 +1,14 @@
 import React from "react";
 import { ApolloError, useQuery } from "@apollo/client";
 import { NEWS_ITEM } from "../graphql/newsItem";
+import "./scss/article.scss";
+import { CommentType, Comment } from "./Comment";
+import { useParams } from "react-router-dom";
 
-import { CommentType } from "./Comment";
-
-export function ArticleView(id: string) {
-  let { data, loading, error } = useQuery<NewsItem>(NEWS_ITEM, {
-    variables: { id },
+export function ArticleView() {
+  const params = useParams();
+  let { data, loading, error } = useQuery(NEWS_ITEM, {
+    variables: { id: params.newsId },
   });
   if (loading)
     return (
@@ -18,16 +20,40 @@ export function ArticleView(id: string) {
   if (!data) {
     return <>Article data wasn't found</>;
   }
-
+  const newsItem = data.newsItem as NewsItem;
   return (
-    <div className="article-wrapper">
-      <div className="article">
-        <img src={data.img} className="article__img" />
-        <div className="article__title">{data.title}</div>
-        <div className="article__content">{data.content}</div>
+    <>
+      <img src={newsItem.img} className="article__img" />
+      <div className="article-wrapper">
+        <div className="article">
+          <div className="article__date">12 hours ago</div>
+          <div className="article__title">{newsItem.title}</div>
+          <div className="article__content">{newsItem.content}</div>
+        </div>
+        <div className="article-comments">
+          <div className="article-comments__title">Comments</div>
+          <div className="article-comments__comments">
+            {newsItem.comments.map((comment) => {
+              return (
+                <Comment
+                  key={comment.id}
+                  id={comment.id}
+                  createdDate={comment.createdDate}
+                  content={comment.content}
+                  email={comment.email}
+                />
+              );
+            })}
+          </div>
+          <div className="article-comments__title">Leave a comment</div>
+          <div className="article-comments__sub-title">Email</div>
+          <input type="email" className="article-comments__email-input" />
+          <div className="article-comments__sub-title">Comment</div>
+          <textarea className="article-comments__comment-input"></textarea>
+          <button className="article-comments__add-btn">ADD COMMENT</button>
+        </div>
       </div>
-      <div className="article-comments"></div>
-    </div>
+    </>
   );
 }
 
