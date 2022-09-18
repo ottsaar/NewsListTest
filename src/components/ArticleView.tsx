@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ChangeEventHandler, FormEvent, useState } from "react";
 import { ApolloError, useQuery } from "@apollo/client";
 import { NEWS_ITEM } from "../graphql/newsItem";
 import "./scss/article.scss";
@@ -7,9 +7,24 @@ import { useParams } from "react-router-dom";
 
 export function ArticleView() {
   const params = useParams();
-  let { data, loading, error } = useQuery(NEWS_ITEM, {
+  const { data, loading, error } = useQuery(NEWS_ITEM, {
     variables: { id: params.newsId },
   });
+  const [inputs, setInputs] = useState({ name: "", value: "" });
+
+  function handleChange(e: any) {
+    const name = e.target.name;
+    const value = e.target.value;
+    setInputs((values) => ({ ...values, [name]: value }));
+  }
+
+  function addComment(e: FormEvent, data: any) {
+    e.preventDefault();
+    if (inputs.name && inputs.value) {
+      data.refetch();
+    }
+  }
+
   if (loading)
     return (
       <>
@@ -29,6 +44,9 @@ export function ArticleView() {
           <div className="article__date">12 hours ago</div>
           <div className="article__title">{newsItem.title}</div>
           <div className="article__content">{newsItem.content}</div>
+          <a className="article__article-btn" href={newsItem.url}>
+            READ FULL ARTICLE
+          </a>
         </div>
         <div className="article-comments">
           <div className="article-comments__title">Comments</div>
@@ -45,12 +63,26 @@ export function ArticleView() {
               );
             })}
           </div>
-          <div className="article-comments__title">Leave a comment</div>
-          <div className="article-comments__sub-title">Email</div>
-          <input type="email" className="article-comments__email-input" />
-          <div className="article-comments__sub-title">Comment</div>
-          <textarea className="article-comments__comment-input"></textarea>
-          <button className="article-comments__add-btn">ADD COMMENT</button>
+          <form className="article-comments__add-comment-wrapper">
+            <div className="article-comments__title">Leave a comment</div>
+            <div className="article-comments__sub-title">Email</div>
+            <input
+              type="email"
+              className="article-comments__email-input"
+              onChange={handleChange}
+            />
+            <div className="article-comments__sub-title">Comment</div>
+            <textarea
+              className="article-comments__comment-input"
+              onChange={handleChange}
+            ></textarea>
+            <input
+              type="submit"
+              onSubmit={(e) => addComment(e, data)}
+              className="article-comments__add-btn"
+              value="ADD COMMENT"
+            />
+          </form>
         </div>
       </div>
     </>
