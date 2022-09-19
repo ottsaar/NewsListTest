@@ -1,7 +1,7 @@
 import React from "react";
 import { ArticleThumbnail } from "./ArticleThumbnail";
 import { useQuery } from "@apollo/client";
-import { NEWS_LIST } from "../graphql/newsList";
+import { NEWS_LIST } from "../graphql/getters/newsList";
 import { Link } from "react-router-dom";
 
 export function Articles() {

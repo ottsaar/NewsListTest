@@ -1,16 +1,28 @@
 import React, { ChangeEventHandler, FormEvent, useState } from "react";
-import { ApolloError, useQuery } from "@apollo/client";
-import { NEWS_ITEM } from "../graphql/newsItem";
+import {
+  ApolloError,
+  useApolloClient,
+  useMutation,
+  useQuery,
+} from "@apollo/client";
+import { NEWS_ITEM } from "../graphql/getters/newsItem";
+import { CREATE_COMMENT } from "../graphql/setters/createComment";
+import { NEWS_COMMENTS } from "../graphql/getters/newsComments";
 import "./scss/article.scss";
 import { CommentType, Comment } from "./Comment";
 import { useParams } from "react-router-dom";
 
 export function ArticleView() {
   const params = useParams();
+  const apolloClient = useApolloClient();
   const { data, loading, error } = useQuery(NEWS_ITEM, {
     variables: { id: params.newsId },
   });
-  const [inputs, setInputs] = useState({ name: "", value: "" });
+  const [inputs, setInputs] = useState({
+    email: "",
+    content: "",
+    comments: null,
+  });
 
   function handleChange(e: any) {
     const name = e.target.name;
@@ -18,10 +30,23 @@ export function ArticleView() {
     setInputs((values) => ({ ...values, [name]: value }));
   }
 
-  function addComment(e: FormEvent, data: any) {
+  async function addComment(e: FormEvent, id: string) {
     e.preventDefault();
-    if (inputs.name && inputs.value) {
-      data.refetch();
+
+    if (inputs.email && inputs.content) {
+      await apolloClient.mutate({
+        mutation: CREATE_COMMENT,
+        variables: { email: inputs.email, content: inputs.content, id },
+      });
+      const result = await apolloClient.query({
+        query: NEWS_COMMENTS,
+        variables: { id },
+      });
+      setInputs((values) => ({
+        ...values,
+        comments: result.data.newsItem.comments,
+      }));
+      console.log(inputs, result.data.newsItem.comments);
     }
   }
 
@@ -51,7 +76,7 @@ export function ArticleView() {
         <div className="article-comments">
           <div className="article-comments__title">Comments</div>
           <div className="article-comments__comments">
-            {newsItem.comments.map((comment) => {
+            {(inputs.comments || newsItem.comments).map((comment) => {
               return (
                 <Comment
                   key={comment.id}
@@ -63,22 +88,26 @@ export function ArticleView() {
               );
             })}
           </div>
-          <form className="article-comments__add-comment-wrapper">
+          <form
+            onSubmit={(e) => addComment(e, newsItem.id)}
+            className="article-comments__add-comment-wrapper"
+          >
             <div className="article-comments__title">Leave a comment</div>
             <div className="article-comments__sub-title">Email</div>
             <input
               type="email"
               className="article-comments__email-input"
+              name="email"
               onChange={handleChange}
             />
             <div className="article-comments__sub-title">Comment</div>
             <textarea
               className="article-comments__comment-input"
+              name="content"
               onChange={handleChange}
             ></textarea>
             <input
               type="submit"
-              onSubmit={(e) => addComment(e, data)}
               className="article-comments__add-btn"
               value="ADD COMMENT"
             />

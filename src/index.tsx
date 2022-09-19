@@ -9,7 +9,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 
 import { ApolloClient, InMemoryCache } from "@apollo/client";
-const client = new ApolloClient({
+export const apolloClient = new ApolloClient({
   uri: "https://news-reader.stagnationlab.dev/graphql",
   cache: new InMemoryCache(),
 });
@@ -17,7 +17,7 @@ import { ApolloProvider } from "@apollo/client/react";
 
 const root = ReactDOM.createRoot(document.getElementById("root")!);
 root.render(
-  <ApolloProvider client={client}>
+  <ApolloProvider client={apolloClient}>
     <App />
   </ApolloProvider>
 );
