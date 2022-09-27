@@ -15,13 +15,15 @@ import { useParams } from "react-router-dom";
 export function ArticleView() {
   const params = useParams();
   const apolloClient = useApolloClient();
-  const { data, loading, error } = useQuery(NEWS_ITEM, {
+  const newsItemData = useQuery(NEWS_ITEM, {
+    variables: { id: params.newsId },
+  });
+  const commentsData = useQuery(NEWS_COMMENTS, {
     variables: { id: params.newsId },
   });
   const [inputs, setInputs] = useState({
     email: "",
     content: "",
-    comments: null,
   });
 
   function handleChange(e: any) {
@@ -36,34 +38,39 @@ export function ArticleView() {
     if (inputs.email && inputs.content) {
       await apolloClient.mutate({
         mutation: CREATE_COMMENT,
-        variables: { email: inputs.email, content: inputs.content, id },
+        variables: { ...inputs, id },
       });
-      const result = await apolloClient.query({
-        query: NEWS_COMMENTS,
-        variables: { id },
-      });
-      setInputs((values) => ({
-        ...values,
-        comments: result.data.newsItem.comments,
-      }));
-      console.log(inputs, result.data.newsItem.comments);
+      setInputs((values) => ({ ...values, email: "", content: "" }));
+      commentsData.refetch();
     }
   }
 
-  if (loading)
+  if (newsItemData.loading)
     return (
       <>
         <div>"Loading article..."</div>
       </>
     );
-  if (error) return <>{error.message}</>;
-  if (!data) {
+  if (newsItemData.error) return <>{newsItemData.error.message}</>;
+  if (!newsItemData.data) {
     return <>Article data wasn't found</>;
   }
-  const newsItem = data.newsItem as NewsItem;
+
+  const newsItem = newsItemData.data.newsItem as NewsItem;
+  const newsComments = commentsData.data
+    ? (commentsData.data?.newsItem as {
+        comments: CommentType[];
+      })
+    : { comments: [] };
   return (
     <>
-      <img src={newsItem.img} className="article__img" />
+      <div className="article__img-wrapper">
+        <div
+          className="article__img"
+          style={{ backgroundImage: `url(${newsItem.img})` }}
+        />
+      </div>
+
       <div className="article-wrapper">
         <div className="article">
           <div className="article__date">12 hours ago</div>
@@ -76,17 +83,21 @@ export function ArticleView() {
         <div className="article-comments">
           <div className="article-comments__title">Comments</div>
           <div className="article-comments__comments">
-            {(inputs.comments || newsItem.comments).map((comment) => {
-              return (
-                <Comment
-                  key={comment.id}
-                  id={comment.id}
-                  createdDate={comment.createdDate}
-                  content={comment.content}
-                  email={comment.email}
-                />
-              );
-            })}
+            {commentsData.loading ? (
+              <></>
+            ) : (
+              newsComments.comments.map((comment) => {
+                return (
+                  <Comment
+                    key={comment.id}
+                    id={comment.id}
+                    createdDate={comment.createdDate}
+                    content={comment.content}
+                    email={comment.email}
+                  />
+                );
+              })
+            )}
           </div>
           <form
             onSubmit={(e) => addComment(e, newsItem.id)}

@@ -8,12 +8,6 @@ export const NEWS_ITEM = gql`
       content
       url
       img
-      comments {
-        id
-        email
-        content
-        createdDate
-      }
     }
   }
 `;

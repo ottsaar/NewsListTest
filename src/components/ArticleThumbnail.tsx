@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./scss/styles.scss";
 
 export interface ArticleType {
@@ -9,8 +10,9 @@ export interface ArticleType {
 }
 
 export function ArticleThumbnail(props: ArticleType) {
+  const urlRef = "news/" + props.id;
   return (
-    <div className="article-thumbnail">
+    <Link className="article-thumbnail" to={urlRef}>
       <img
         className="article-thumbnail__img"
         src={props.imgSrc}
@@ -25,6 +27,6 @@ export function ArticleThumbnail(props: ArticleType) {
       >
         {props.title}
       </div>
-    </div>
+    </Link>
   );
 }

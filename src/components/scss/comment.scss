@@ -2,6 +2,10 @@
 
 .comment {
   padding: 16px;
+  margin-top: 16px;
+  background: white;
+  border-radius: 3px;
+
   &__info {
     display: flex;
     flex-direction: row;

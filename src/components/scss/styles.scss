@@ -1,6 +1,9 @@
+@import "variables";
+
 body {
-  background: #f7f7f7;
+  background: white;
 }
+
 .articles {
   margin-top: 24px;
   padding: 32px;
@@ -8,20 +11,13 @@ body {
   gap: 8px;
   flex-wrap: wrap;
 }
-.article-thumbnail:nth-of-type(1) {
-  width: 500px;
-}
-.article-thumbnail:nth-of-type(2) {
-  width: 500px;
-}
 
-.articles > .article-thumbnail {
-  flex: 1 1 150px;
-}
 .article-thumbnail {
   display: flex;
   flex-direction: column;
-  width: 300px;
+  text-decoration: none;
+  color: $black-100;
+  width: calc((100% / 4) - 6px);
 
   &__title {
     margin-top: 16px;
@@ -45,6 +41,20 @@ body {
   &__img {
     filter: drop-shadow(0px 4px 10px rgba(0, 0, 0, 0.1));
     border-radius: 3px;
+    object-fit: cover;
+    height: 100%;
+  }
+  &:nth-of-type(1),
+  &:nth-of-type(2) {
+    width: calc((100% / 2) - 4px);
+  }
+
+  @include mobile {
+    width: calc((100% / 2) - 4px);
+
+    &:nth-of-type(1) {
+      width: 100%;
+    }
   }
 }
 
