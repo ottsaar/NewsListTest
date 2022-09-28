@@ -10,10 +10,6 @@ export interface CommentType {
 }
 
 export function Comment(props: CommentType) {
-  function formatComment(date: string) {
-    return moment(date).startOf("minute").fromNow();
-  }
-
   return (
     <div className="comment">
       <div className="comment__info">
@@ -26,4 +22,8 @@ export function Comment(props: CommentType) {
       <div className="comment__content">{props.content}</div>
     </div>
   );
+}
+
+function formatComment(date: string) {
+  return moment(date).startOf("minute").fromNow();
 }

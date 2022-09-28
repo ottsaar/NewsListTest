@@ -6,6 +6,8 @@ import { NEWS_LIST } from "../graphql/getters/newsList";
 import { ArticleThumbnail } from "./ArticleThumbnail";
 import bikeDelivery from "../assets/svgs/bike-delivery.svg";
 import "./scss/articles.scss";
+import { MissingNewsComponent } from "../assets/MissingNewsComponent";
+import { Link } from "react-router-dom";
 
 export function Articles() {
   const { data, loading, error } = useQuery(NEWS_LIST);
@@ -26,7 +28,18 @@ export function Articles() {
         </div>
       </div>
     );
-  if (error) return <>{error.message}</>;
+
+  if (error || !data.newsList?.rows?.length)
+    return (
+      <div className="article-not-found">
+        <MissingNewsComponent />
+        <div className="article-not-found__text">
+          There was an issue loading articles.
+          <br /> Please try again later
+        </div>
+      </div>
+    );
+
   const articles: ArticleRow[] = data.newsList.rows;
   return (
     <div className="articles">

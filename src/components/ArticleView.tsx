@@ -111,6 +111,7 @@ export function ArticleView() {
         comments: CommentType[];
       })
     : { comments: [] };
+
   return (
     <motion.div
       className="article-view"
@@ -195,12 +196,6 @@ export function ArticleView() {
       </div>
     </motion.div>
   );
-}
-
-interface QueryResult {
-  data?: NewsItem;
-  loading: string;
-  error: ApolloError;
 }
 
 interface NewsItem {
