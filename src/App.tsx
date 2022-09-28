@@ -1,14 +1,25 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { ArticleThumbnail } from "./components/ArticleThumbnail";
 import { ArticleView } from "./components/ArticleView";
 import { Articles } from "./components/Articles";
 import { Titlebar } from "./components/Titlebar";
+import { ErrorPage } from "./components/ErrorPage";
+import { AnimatePresence } from "framer-motion";
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
+      <AnimatedRouter />
+    </BrowserRouter>
+  );
+}
+
+function AnimatedRouter() {
+  const location = useLocation();
+  return (
+    <AnimatePresence>
+      <Routes key={location.key} location={location}>
         <Route path="/" element={<Titlebar />}>
           <Route index element={<Articles />}></Route>
           <Route path="news/:newsId" element={<ArticleView />} />
@@ -16,17 +27,10 @@ function App() {
             path="news"
             element={<ArticleThumbnail title="suva" imgSrc="" id="suva" />}
           />
-          <Route
-            path="*"
-            element={
-              <div>
-                <p>teEROOEROKEPOSKDFre</p>
-              </div>
-            }
-          />
+          <Route path="*" element={<ErrorPage />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+    </AnimatePresence>
   );
 }
 

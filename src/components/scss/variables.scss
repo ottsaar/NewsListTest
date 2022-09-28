@@ -1,6 +1,10 @@
 $black-100: #09101d;
 $brown-grey: #666666;
+$grey-200: #51555a;
 $grey-100: #2c2e32;
+$green-blue: #009a68;
+$orange: #e64d26;
+
 // media devices
 @mixin mobile {
   @media screen and (max-width: 768px) {

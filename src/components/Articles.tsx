@@ -1,20 +1,33 @@
 import React from "react";
-import { ArticleThumbnail } from "./ArticleThumbnail";
+
 import { useQuery } from "@apollo/client";
 import { NEWS_LIST } from "../graphql/getters/newsList";
-import "./scss/styles.scss";
+
+import { ArticleThumbnail } from "./ArticleThumbnail";
+import bikeDelivery from "../assets/svgs/bike-delivery.svg";
+import "./scss/articles.scss";
 
 export function Articles() {
   const { data, loading, error } = useQuery(NEWS_LIST);
+
   if (loading)
     return (
-      <>
-        <div>"Loading..."</div>
-      </>
+      <div className="articles-loading">
+        <img className="articles-loading__img" src={bikeDelivery} />
+        <div className="articles-loading__background">
+          <div className="articles-loading__speed-lines" />
+          <div className="articles-loading__speed-lines" />
+          <div className="articles-loading__speed-lines" />
+          <div className="articles-loading__ground" />
+        </div>
+
+        <div className="articles-loading__text">
+          Getting you the freshest news from the web!
+        </div>
+      </div>
     );
   if (error) return <>{error.message}</>;
   const articles: ArticleRow[] = data.newsList.rows;
-
   return (
     <div className="articles">
       {articles.map((row) => {

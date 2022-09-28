@@ -6,6 +6,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 module.exports = {
   mode: prod ? "production" : "development",
   entry: "./src/index.tsx",
+  cache: true,
   output: {
     path: __dirname + "/dist/",
     publicPath: "/",
@@ -34,6 +35,14 @@ module.exports = {
       {
         test: /\.(s(a|c)ss)$/,
         use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
+      },
+      {
+        test: /\.(jpg|png|gif)$/,
+        loader: "file-loader",
+        options: {
+          name: "[path][name].[ext]",
+          path: __dirname + "/dist/imgs",
+        },
       },
     ],
   },

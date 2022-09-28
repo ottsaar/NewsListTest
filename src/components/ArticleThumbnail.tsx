@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "./scss/styles.scss";
 
 export interface ArticleType {
   imgSrc: string;

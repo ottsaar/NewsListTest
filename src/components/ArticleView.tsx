@@ -1,16 +1,18 @@
 import React, { ChangeEventHandler, FormEvent, useState } from "react";
-import {
-  ApolloError,
-  useApolloClient,
-  useMutation,
-  useQuery,
-} from "@apollo/client";
+import { Link, useParams } from "react-router-dom";
+import { motion } from "framer-motion";
+
+import { ApolloError, useApolloClient, useQuery } from "@apollo/client";
 import { NEWS_ITEM } from "../graphql/getters/newsItem";
 import { CREATE_COMMENT } from "../graphql/setters/createComment";
 import { NEWS_COMMENTS } from "../graphql/getters/newsComments";
-import "./scss/article.scss";
+
 import { CommentType, Comment } from "./Comment";
-import { useParams } from "react-router-dom";
+import placeholder from "../assets/svgs/placeholder-image.svg";
+import noComments from "../assets/imgs/nocomments.png";
+import { MissingNewsComponent } from "../assets/MissingNewsComponent";
+
+import "./scss/article.scss";
 
 export function ArticleView() {
   const params = useParams();
@@ -21,6 +23,7 @@ export function ArticleView() {
   const commentsData = useQuery(NEWS_COMMENTS, {
     variables: { id: params.newsId },
   });
+
   const [inputs, setInputs] = useState({
     email: "",
     content: "",
@@ -47,13 +50,59 @@ export function ArticleView() {
 
   if (newsItemData.loading)
     return (
-      <>
-        <div>"Loading article..."</div>
-      </>
+      <motion.div
+        className="article-view article-view--placeholder"
+        initial={{ opacity: 0, x: 200 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: 200 }}
+        transition={{ duration: 0.25 }}
+      >
+        <div className="article__img-wrapper">
+          <img
+            className="article__img article__img--placeholder"
+            src={placeholder}
+          />
+        </div>
+
+        <div className="article-wrapper">
+          <div className="article">
+            <div className="article__date">
+              <div className="article__placeholder article__placeholder--date" />
+            </div>
+            <div className="article__title">
+              <div className="article__placeholder article__placeholder--title" />
+            </div>
+            <div className="article__content">
+              <div className="article__placeholder" />
+              <div className="article__placeholder" />
+              <div className="article__placeholder" />
+              <div className="article__placeholder" />
+              <div className="article__placeholder" />
+            </div>
+            <a className="primary-btn article__article-btn" />
+          </div>
+          <div className="article-comments">
+            <div className="article-comments__title">Comments</div>
+            <div className="article-comments__comments" />
+          </div>
+        </div>
+      </motion.div>
     );
-  if (newsItemData.error) return <>{newsItemData.error.message}</>;
-  if (!newsItemData.data) {
-    return <>Article data wasn't found</>;
+
+  if (
+    newsItemData.error ||
+    !newsItemData.data ||
+    !newsItemData.data?.newsItem
+  ) {
+    return (
+      <div className="article-not-found">
+        <MissingNewsComponent />
+        <div className="article-not-found__text">Article wasn't found.</div>
+        <Link className="primary-btn" to="/">
+          RETURN TO MAIN MENU
+        </Link>
+      </div>
+    );
   }
 
   const newsItem = newsItemData.data.newsItem as NewsItem;
@@ -63,7 +112,13 @@ export function ArticleView() {
       })
     : { comments: [] };
   return (
-    <>
+    <motion.div
+      className="article-view"
+      initial={{ opacity: 0, x: 200 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 200 }}
+      transition={{ duration: 0.25 }}
+    >
       <div className="article__img-wrapper">
         <div
           className="article__img"
@@ -73,10 +128,12 @@ export function ArticleView() {
 
       <div className="article-wrapper">
         <div className="article">
-          <div className="article__date">12 hours ago</div>
+          <div className="article__date" data-title="28.09.2022">
+            12 hours ago
+          </div>
           <div className="article__title">{newsItem.title}</div>
           <div className="article__content">{newsItem.content}</div>
-          <a className="article__article-btn" href={newsItem.url}>
+          <a className="primary-btn  article__article-btn" href={newsItem.url}>
             READ FULL ARTICLE
           </a>
         </div>
@@ -85,6 +142,17 @@ export function ArticleView() {
           <div className="article-comments__comments">
             {commentsData.loading ? (
               <></>
+            ) : !newsComments.comments.length ? (
+              <div className="article-comments__empty-state">
+                <img
+                  className="article-comments__empty-state-img"
+                  src={noComments}
+                />
+                <div className="article-comments__empty-state-text">
+                  No comments were found. <br />
+                  Be the first to comment!
+                </div>
+              </div>
             ) : (
               newsComments.comments.map((comment) => {
                 return (
@@ -125,7 +193,7 @@ export function ArticleView() {
           </form>
         </div>
       </div>
-    </>
+    </motion.div>
   );
 }
 

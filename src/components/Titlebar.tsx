@@ -17,7 +17,6 @@ export function Titlebar() {
         )}
         <div className="title-bar__header">World News</div>
       </div>
-
       <Outlet />
     </>
   );
