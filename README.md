@@ -2,7 +2,7 @@
 
 If you just wish to test the application you can do it via this [link](http://178.157.91.173:3000/). 
 
-I try to keep the server running, but if the server is down, please contact me via email(ST team should have my email :)).
+I try to keep the server running, but if the server is down, please contact me via email(SL team should have my email :)).
 
 
 This is a basic react application:
